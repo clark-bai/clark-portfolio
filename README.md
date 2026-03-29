@@ -85,4 +85,4 @@ Lighthouse performance budget: ≥ 95 desktop / ≥ 90 mobile. PRs that regress 
 
 ## Deployment
 
-Hosted on Netlify (free tier). The `cd.yml` workflow deploys automatically on every merge to `main` using `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` stored as GitHub Actions secrets.
+Hosted on Vercel.
