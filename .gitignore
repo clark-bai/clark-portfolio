@@ -31,3 +31,6 @@ portfolio-spec.md
 
 # vscode setting folder
 .vscode/
+
+# vercel
+.vercel
