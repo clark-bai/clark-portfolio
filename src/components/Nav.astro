@@ -1,0 +1,178 @@
+---
+const currentPath = Astro.url.pathname;
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav__inner container">
+    <a href="/" class="nav__logo">Clark</a>
+
+    <button
+      class="nav__toggle"
+      aria-expanded="false"
+      aria-controls="nav-menu"
+      aria-label="Toggle navigation menu"
+    >
+      <span class="nav__hamburger" aria-hidden="true"></span>
+    </button>
+
+    <ul id="nav-menu" class="nav__links" role="list">
+      {links.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class:list={['nav__link', { 'nav__link--active': currentPath === href }]}
+            aria-current={currentPath === href ? 'page' : undefined}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+      <li>
+        <a href="/cv.pdf" class="nav__link" download>CV</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<script>
+  const toggle = document.querySelector('.nav__toggle');
+  const menu = document.getElementById('nav-menu');
+
+  toggle?.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    menu?.classList.toggle('nav__links--open');
+  });
+</script>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--nav-height);
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    z-index: 100;
+  }
+
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .nav__logo {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .nav__logo:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .nav__links {
+    display: flex;
+    gap: var(--space-6);
+    list-style: none;
+  }
+
+  .nav__link {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .nav__link:hover,
+  .nav__link--active {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  /* Hamburger button — hidden on desktop */
+  .nav__toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-2);
+  }
+
+  .nav__hamburger,
+  .nav__hamburger::before,
+  .nav__hamburger::after {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--color-text);
+    border-radius: 2px;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .nav__hamburger {
+    position: relative;
+  }
+
+  .nav__hamburger::before,
+  .nav__hamburger::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .nav__hamburger::before { top: -7px; }
+  .nav__hamburger::after  { top: 7px; }
+
+  /* Animate to X when open */
+  .nav__toggle[aria-expanded='true'] .nav__hamburger {
+    background-color: transparent;
+  }
+
+  .nav__toggle[aria-expanded='true'] .nav__hamburger::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  .nav__toggle[aria-expanded='true'] .nav__hamburger::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+
+  /* Mobile */
+  @media (max-width: 639px) {
+    .nav__toggle {
+      display: block;
+    }
+
+    .nav__links {
+      display: none;
+      position: absolute;
+      top: var(--nav-height);
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      background-color: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-4);
+      gap: var(--space-4);
+    }
+
+    .nav__links--open {
+      display: flex;
+    }
+  }
+</style>
