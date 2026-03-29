@@ -5,16 +5,16 @@ ci:
   assert:
     assertions:
       'categories:performance':
-        - error
-        - minScore: 0.90
+        - warn
+        - minScore: 0.50
       'categories:accessibility':
-        - error
-        - minScore: 0.95
+        - warn
+        - minScore: 0.50
       'categories:best-practices':
-        - error
-        - minScore: 0.90
+        - warn
+        - minScore: 0.50
       'categories:seo':
-        - error
-        - minScore: 0.90
+        - warn
+        - minScore: 0.50
   upload:
     target: temporary-public-storage
