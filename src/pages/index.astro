@@ -15,6 +15,35 @@ import Base from '../layouts/Base.astro';
   </section>
 </Base>
 
+<script is:inline>
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var el = document.querySelector('.hero__tagline');
+    if (!el) return;
+
+    var text = el.textContent.trim();
+    el.textContent = '';
+    el.classList.add('hero__tagline--typing');
+
+    var i = 0;
+    var speed = 45;
+
+    function type() {
+      if (i < text.length) {
+        el.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, speed);
+      } else {
+        el.classList.remove('hero__tagline--typing');
+        el.classList.add('hero__tagline--done');
+      }
+    }
+
+    type();
+  })();
+</script>
+
 <style>
   .hero {
     display: flex;
@@ -25,6 +54,24 @@ import Base from '../layouts/Base.astro';
     min-height: calc(100dvh - var(--nav-height));
     padding: var(--space-8) var(--space-4);
     margin-top: var(--nav-height);
+    position: relative;
+    isolation: isolate;
+
+    --hero-grad-1: rgba(37, 99, 235, 0.05);
+    --hero-grad-2: rgba(37, 99, 235, 0.08);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 40%, var(--hero-grad-1), transparent),
+      radial-gradient(ellipse 60% 80% at 70% 60%, var(--hero-grad-2), transparent);
+    background-size: 200% 200%;
+    animation: hero-bg-drift 20s ease-in-out infinite alternate;
   }
 
   .hero__name {
@@ -37,6 +84,20 @@ import Base from '../layouts/Base.astro';
     font-size: var(--font-size-lg);
     color: var(--color-text-secondary);
     max-width: var(--measure);
+    min-height: 1.7em;
+  }
+
+  .hero__tagline:global(.hero__tagline--typing)::after {
+    content: '|';
+    display: inline-block;
+    color: var(--color-accent);
+    animation: blink 0.7s step-end infinite;
+    margin-left: 2px;
+    font-weight: var(--font-weight-normal);
+  }
+
+  .hero__tagline:global(.hero__tagline--done)::after {
+    content: none;
   }
 
   .hero__cta {
@@ -78,5 +139,40 @@ import Base from '../layouts/Base.astro';
     border-color: var(--color-accent);
     color: var(--color-accent);
     text-decoration: none;
+  }
+
+  @keyframes hero-bg-drift {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+  }
+
+  /* Dark mode overrides for gradient */
+  @media (prefers-color-scheme: dark) {
+    .hero:not(:global([data-theme='light']) .hero) {
+      --hero-grad-1: rgba(59, 130, 246, 0.06);
+      --hero-grad-2: rgba(59, 130, 246, 0.10);
+    }
+  }
+
+  :global([data-theme='dark']) .hero {
+    --hero-grad-1: rgba(59, 130, 246, 0.06);
+    --hero-grad-2: rgba(59, 130, 246, 0.10);
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hero::before {
+      animation: none;
+    }
+
+    .hero__tagline:global(.hero__tagline--typing)::after {
+      animation: none;
+      content: none;
+    }
   }
 </style>
