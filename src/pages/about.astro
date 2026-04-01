@@ -1,0 +1,158 @@
+---
+import Base from '../layouts/Base.astro';
+
+const skillCategories = [
+  {
+    title: 'Languages',
+    items: ['Python', 'R', 'JavaScript', 'TypeScript', 'SQL', 'LaTeX'],
+  },
+  {
+    title: 'Bioinformatics',
+    items: ['BLAST', 'Biopython', 'Bioconductor', 'Nextflow', 'samtools', 'IGV'],
+  },
+  {
+    title: 'Machine Learning',
+    items: ['PyTorch', 'scikit-learn', 'pandas', 'NumPy'],
+  },
+  {
+    title: 'Tools & Workflow',
+    items: ['Git', 'Linux CLI', 'VS Code', 'Docker'],
+  },
+];
+---
+
+<Base title="About — Clark" description="About Clark — computer science graduate specialising in bioinformatics and machine learning.">
+  <div class="about container">
+    <h1 class="about__title">About</h1>
+
+    <section class="about__bio prose" aria-labelledby="bio-heading">
+      <h2 id="bio-heading" class="sr-only">Biography</h2>
+      <p>
+        I'm Clark, a computer science graduate with a deep interest in the
+        places where biology meets computation. My dissertation focused on
+        applying machine learning techniques to genomic data, and that
+        experience shaped the way I think about problem-solving — always
+        looking for the point where a well-chosen algorithm can unlock insight
+        from complex, messy datasets.
+      </p>
+      <p>
+        Beyond bioinformatics, I enjoy building tools and interfaces that make
+        technical work more accessible. I'm drawn to clean code, reproducible
+        pipelines, and the kind of software engineering practices that make
+        collaboration easier — version control, testing, documentation, and
+        automation. I'm equally comfortable writing a Python analysis script
+        as I am putting together a web application.
+      </p>
+      <p>
+        I'm currently looking for roles where I can apply computational
+        thinking to real-world problems, whether that's in research,
+        health-tech, data engineering, or software development more broadly.
+        If you're working on something interesting, I'd love to hear about it.
+      </p>
+    </section>
+
+    <section class="about__skills" aria-labelledby="skills-heading">
+      <h2 id="skills-heading" class="about__section-title">Skills</h2>
+      <div class="skills-grid">
+        {skillCategories.map((category) => (
+          <div class="skills-group">
+            <h3 class="skills-group__title">{category.title}</h3>
+            <ul class="skills-group__list" role="list">
+              {category.items.map((skill) => (
+                <li class="pill">{skill}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <div class="about__cta">
+      <a href="/cv.pdf" class="btn btn--primary" download>
+        Download CV
+        <span class="sr-only">(PDF)</span>
+      </a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .about {
+    margin-top: var(--nav-height);
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-16);
+  }
+
+  .about__title {
+    margin-bottom: var(--space-8);
+  }
+
+  .about__bio {
+    margin-bottom: var(--space-12);
+  }
+
+  .about__section-title {
+    margin-bottom: var(--space-6);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-8);
+  }
+
+  .skills-group__title {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-3);
+  }
+
+  .skills-group__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: var(--space-1) var(--space-3);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+
+  .about__cta {
+    margin-top: var(--space-12);
+  }
+
+  .btn {
+    display: inline-block;
+    padding: var(--space-2) var(--space-6);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none;
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  .btn--primary {
+    background-color: var(--color-accent);
+    color: #ffffff;
+  }
+
+  .btn--primary:hover {
+    background-color: var(--color-accent-hover);
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  @media (max-width: 639px) {
+    .skills-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
