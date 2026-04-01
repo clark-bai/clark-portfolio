@@ -1,0 +1,76 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const projects = await getCollection('projects');
+
+// Sort: featured first, then by date descending
+projects.sort((a, b) => {
+  if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+  return b.data.date.getTime() - a.data.date.getTime();
+});
+
+// Render markdown bodies
+const rendered = await Promise.all(
+  projects.map(async (project) => {
+    const { Content } = await render(project);
+    return { project, Content };
+  })
+);
+---
+
+<Base title="Projects — Clark" description="Selected projects in bioinformatics, machine learning, and software engineering.">
+  <div class="projects container">
+    <h1 class="projects__title">Projects</h1>
+    <p class="projects__intro">
+      Click a card to expand and read more about the project.
+    </p>
+
+    <div class="projects__grid">
+      {rendered.map(({ project, Content }) => {
+        // Render Content to HTML string for the card body
+        return (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            tags={project.data.tags}
+            github={project.data.github}
+            featured={project.data.featured}
+            body={project.rendered?.html ?? ''}
+          />
+        );
+      })}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .projects {
+    margin-top: var(--nav-height);
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-16);
+  }
+
+  .projects__title {
+    margin-bottom: var(--space-2);
+  }
+
+  .projects__intro {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-8);
+  }
+
+  .projects__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+
+  @media (max-width: 639px) {
+    .projects__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

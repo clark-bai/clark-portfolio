@@ -1,0 +1,205 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  tags: string[];
+  github: string;
+  featured?: boolean;
+  body: string;
+}
+
+const { title, description, tags, github, featured = false, body } = Astro.props;
+---
+
+<details class:list={['project-card', { 'project-card--featured': featured }]}>
+  <summary class="project-card__summary">
+    <div class="project-card__header">
+      <h3 class="project-card__title">
+        {title}
+        {featured && <span class="project-card__badge">Dissertation</span>}
+      </h3>
+      <p class="project-card__description">{description}</p>
+      <ul class="project-card__tags" role="list">
+        {tags.map((tag) => (
+          <li class="pill">{tag}</li>
+        ))}
+      </ul>
+      <div class="project-card__links">
+        <a href={github} target="_blank" rel="noopener noreferrer" class="project-card__link" onclick="event.stopPropagation();">
+          GitHub
+          <span class="sr-only">(opens in new tab)</span>
+        </a>
+      </div>
+    </div>
+    <span class="project-card__chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="project-card__body prose">
+    <Fragment set:html={body} />
+  </div>
+</details>
+
+<style>
+  .project-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background-color: var(--color-bg);
+    transition: box-shadow 0.15s, border-color 0.15s;
+  }
+
+  .project-card:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .project-card--featured {
+    border-color: var(--color-accent);
+  }
+
+  .project-card__summary {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .project-card__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .project-card__summary::marker {
+    display: none;
+    content: '';
+  }
+
+  .project-card__header {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .project-card__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .project-card__badge {
+    display: inline-block;
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-sm);
+    line-height: 1;
+  }
+
+  .project-card__description {
+    margin-top: var(--space-2);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .project-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+    margin: var(--space-3) 0 0;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: var(--space-1) var(--space-3);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--font-size-xs);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+
+  .project-card__links {
+    margin-top: var(--space-3);
+  }
+
+  .project-card__link {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .project-card__chevron {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: var(--space-1);
+    position: relative;
+  }
+
+  .project-card__chevron::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--color-text-secondary);
+    border-bottom: 2px solid var(--color-text-secondary);
+    transform: translate(-50%, -65%) rotate(45deg);
+    transition: transform 0.2s;
+  }
+
+  .project-card[open] .project-card__chevron::before {
+    transform: translate(-50%, -35%) rotate(-135deg);
+  }
+
+  .project-card__body {
+    padding: 0 var(--space-6) var(--space-6);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-6);
+  }
+
+  .project-card__body :global(h2) {
+    font-size: var(--font-size-lg);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+  }
+
+  .project-card__body :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .project-card__body :global(p) {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .project-card__body :global(ul) {
+    padding-left: var(--space-6);
+    margin-top: var(--space-2);
+  }
+
+  .project-card__body :global(li) {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin-top: var(--space-1);
+  }
+
+  .project-card__body :global(strong) {
+    color: var(--color-text);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  @media (max-width: 639px) {
+    .project-card__summary {
+      padding: var(--space-4);
+    }
+
+    .project-card__body {
+      padding: 0 var(--space-4) var(--space-4);
+      padding-top: var(--space-4);
+    }
+  }
+</style>
